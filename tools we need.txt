@@ -1,0 +1,284 @@
+
+========================
+directory ennumeration
+========================
+------------------
+tools & wordlists:
+------------------
+
+-> dirsearch
+-> ffuf
+-> wordlists:https://wordlists.assetnote.io/
+
+=========================
+technology fingerprinting
+==========================
+
+->wappalyzer plugin
+-> whatweb
+
+===============
+CVEs
+===============
+
+----------
+websites
+----------
+
+-> https://cve.mitre.org/
+->https://www.cvedetails.com/
+->https://www.exploit-db.com
+->https://snyk.io/
+-> https://www.cybersecurity-help.cz/vdb/
+
+=================
+port scanning
+=================
+
+-------
+tools
+--------
+-> nmap
+-> nabbu
+
+======================
+broken link hijacking
+======================
+
+--------
+tools
+--------
+-> broken link hijacking burp plugin
+
+htts://github.com/arbazkiraak/burpBLH
+
+======================================
+js files for hardcoded apis & secrets
+======================================
+
+---------
+tools
+---------
+
+-> secretfinder
+->jfscan
+-> linkfinder
+->detectDynamicJS
+-> retrive.js
+->js link finder
+
+=====================
+parameter discovery
+=====================
+
+-------
+tools
+-------
+-> arjun: https://github.com/sOmd3v/arjun
+->paramSpider: https://github.com/devanshbatham/paramSpider
+-> param miner: https://github.com/portswigger/param-miner
+
+=======================
+wayback history
+=======================
+
+----------------
+tools & websites
+-----------------
+-> wayback machine
+->wayback urls:https://github.com/tomnomnom/waybackurls
+->gau:https://github.com/lc/gau
+
+=======================================
+domain-specific github & google dorking
+========================================
+
+------------------
+tools & websites
+------------------
+
+->GHDB:https://www.exploit-db.com/google-hacking-database
+->intresting github dorks list:https://gist.githubusercontent.com/EdOverflow/8bd2faad513626c413b8fc6e9d955669/raw/06a0ef0fd83920d513c65767aae258ecf8382bdf/gistfile1.txt
+
+
+-> gitdorker:
+https://github.com/obheda12/gitdorker/tree/master/dorks
+->gitRob: https://github.com/michenriksen/gitrob
+->Githoud:https://github.com/tillson/git-hound
+
+
+
+=======================
+data breach analysis
+=======================
+
+-----------
+websites
+-----------
+
+-> intelX:https://intelx.io/
+-> hacking forums
+->darknet/darkweb anlaysis.
+
+===========================
+misconfigured cloud storage
+============================
+
+-------------
+references
+-------------
+S3 Misconfiguration Article: https://medium.com/bugbountywriteup/s3-bucket-misconfigured-access-controls-to-critical-vulnerability-6b535e3df9a5
+
+
+==================================================================================================
+            medium scope recon
+==================================================================================================
+
+example: *.tesla.com
+
+=====================
+subdomain enumeration
+=====================
+
+->subfinder
+->assetfinder
+-> amass
+->chaos
+->sudomy
+
+======================
+subdomain bruteforcing
+======================
+
+---------
+tools
+---------
+->dnsx: https://github.com/projectdiscovery/dnsx
+->dns validator(to generate resolvers list)
+https://github.com/vortexau/dnsvalidator
+
+============================
+sub-domain takeover
+============================
+
+--------
+tools
+--------
+
+-> nuclei templates
+->subdomain takeover:https://github.com/antichown.subdomain-takeover
+-> takeover:https://github.com/m4llOk/takeover
+->Osmedus takeover module: https://github.com/j3ssie/Osmedeus
+
+
+===========
+probing
+===========
+Once you are done enumerating and gathering subdomains from all the possible ways, the next step is to use this list of subdomains/domains and probe for working HTTP and HTTPS servers in order to filter out interesting endpoints out of the rest. You will often find out of 1000 subdomains, only 600 or so are having working HTTP/HTTPS Servers running or are reachable. This method helps you to define your attack surface in a better way.
+
+
+----------
+tools
+----------
+->httpx: https://github.com/projectdiscovert/httpx
+->httprobe:https://github.com/tomnomnom/httprobe
+
+========================
+template based scanning
+========================
+This has been a game-changer in reconnaissance. Template-based scanners allow you to create a template to identify a vulnerability and re-run it on any number of targets. It works on regex and other matching patterns to check if the conditions are satisfied and if yes, it flags for that specific vulnerability. Most of the remote and unauthenticated CVEs are automated using Nuclei & Jaeles templates. It is easy to create your own templates, more information about this can be found on their GitHub Repositories.
+
+---------
+tools
+---------
+-> nuclei:https://github.com/projectdiscovery/nuclei
+->jaeles:https://github.com/jaeles-project/jaeles
+
+=================================
+internet search engine discovery
+=================================
+
+Internet Search Engines (not to be confused with Google, Yahoo, Bing, etc.) are some services that monitor various internet-connected devices, services, endpoints and allows you to enumerate through them and find a bunch of misconfiguration. From penetration testing, red teaming to bug bounties, they play an important role and allows you to increase your attack surface to a greater extent.
+
+----------
+websites
+----------
+->shodan:https://www.shodan.io
+->spyse:http://spyse.com/
+->censys:https://censys.io/
+->fofa:https://fofa.so/
+->binaryEdge:https://www.binaryedge.io/
+
+====================================
+potential pattern extraction with Gf
+=====================================
+
+: Once you enumerate various URLs using waybackurls, gau, and other resources, you can use GF patterns to extract URLs that may be an interesting vector to check for specific attacks such as XSS, SSRF, SQLi, etc. You can further automate those URLs to perform automated detection of vulnerabilities while you work on them manually.
+
+------
+tools
+------
+gf:https://github.com/tomnomnom/gf
+gf patterns:https://github.com/Indianl33t/GF-patterns
+
+======================
+heartbleed scanning
+======================
+
+his is a well-known vulnerability found in the SSL/TLS of an application. However, seen rarely but always a good thing to check for on a larger set of targets.
+
+----------
+tools
+----------
+-> massBleed:https://github.com/1n3/massBleed
+
+=====================================
+general security misconfigur scanning
+======================================
+Apart from all of the above, you can always automate scanning for various other general misconfiguration such as:
+
+
+
+->cors scanning
+->security headers scanning
+->spf record scanning
+->crlf injection scanning
+->http request smuggling detection(high chance of false positives in automation)
+
+========================================================================================================
+            large scope recon
+========================================================================================================
+
+
+
+
+===========================================
+subsidiary & acquisition enumeration
+===========================================
+
+---------
+websites
+---------
+owler:https://corp.owler.com/
+crunchbase:https://www.crunchbase.com/
+wikipedia & open google search
+
+==============
+reverse lookup
+==============
+
+----------------
+tools & websites
+-----------------
+
+-> amass
+->https://viewdns.info/reverseip
+
+
+==================================
+automated recon frameworks
+==================================
+
+->project Bheem:https://github.com/harsh-bothra/bheem
+->osmedues:https://github.com/j3ssie/osmedus
+->reconNote: https://github.com/oxedekster/reconnote

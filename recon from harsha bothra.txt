@@ -1,0 +1,164 @@
+==================
+AGENDA
+==================
+
+recon 101 --> scope based methodology--> small scope recon -->> medium scope recon --> large scope recon --> pffensive reco tactics --> project bheem-scope based recon release.
+
+=====================
+what is recon
+=====================
+
+--> way to discover & create a better attack surface!(we'll see how)
+
+================
+why recon?
+================
+
+--> increase attack surface == more security issues
+-->> looking at less travelled road ==more success
+--> digging assets of your target to the deepest point possible
+--> recon!=security issues but increases probability of gettting >> security issues.
+
+====================
+busting the myths
+====================
+
+-->> recon == bugs
+	-->> recon = Asset Discovery == increasing attack surface
+-->> recon == manual Approach
+	-->> best way to perform recon is to use hybrid approach - automation + manual
+-->> recon == time consuming
+	-->> it performed properly & automated in right way,you can save a lot of time.
+-->> recon == subdomain enumeration,who is ,port scanning & Fuzzing ,etc..
+	-->> ways to perform recon is all abput how creative you can be to identify assets and increase attack surface.however,the above mentioned are some well known methods.
+
+
+==================================
+SCOPE BASED RECON
+===================================
+scope based recon is simply methodology to divide how to perform when a specific set of scope is provided.
+scopes are divided into 3 categories
+-> small scope
+-> medium scope
+-> large scope
+
+---------------------
+why scope based recon
+----------------------
+-->> saves a lot of time
+-->> you know what exactly to look for
+-->> you can easily automate your recon workflow
+-->> less-chance to submit out-of-scope issues
+-->> just like other security methodologies enables you perform a better recon.
+
+================
+scopes
+================
+
+------------
+small scope
+------------
+-> specific set of single urls/sandbox/QA/staging environment.
+--------------
+medium scope
+--------------
+-> specific set of "*.target.com"
+example: "*.tesla.com"
+
+-------------
+large scope
+-------------
+complete internet presence including acquisitions & copyrights.
+
+
+=========================================
+small scope recon :what to look for while performing recon
+=========================================
+
+-> directory enumeration/bruteforcing
+-> service enumeration
+->cves
+-> port scanning
+-> broken link hijacking
+-> js files for hardcoded apis & secrets.
+-> parameter discovery
+-> wayback history & waybackurls.
+-> google dork(lookinng for juicy info related to scope domains.)
+-> potential url extraction for vulnnerability automation(gf patterns + automation scripts)
+
+============================================
+medium scope recon
+=============================================
+
+---------------------------
+what to look for while recon
+----------------------------
+->subdomain enumeration
+-> subdomain takeovers
+-> misconfigured third-party services.
+->CVEs
+->port scanning
+-> misconfigured storage options(s3 buckets)
+-> broken link hijacking
+-> directory enumeration.
+-> service enumeration
+->js files for domains,sensitive information such as hardcoded apis & secrets
+->github recon
+->parameter discovery
+->wayback history & waybackurls
+->google dork for increasing attack surface
+-> internet search engine discovery(shodan,censys,fofa,binaryEdge,spyse etc..)
+->potential utl extraction for vulnerability automation(gf patterns+automation scripts)
+
+=====================================
+large scope recon
+=====================================
+------------------------------
+what to look for while recon
+------------------------------
+-> tracking & tracing every possible signature of the target application(often there might not be any history on google releated to a cope target,but you can still crawl it.)
+-> subsidery & acquisition enumeration (depth-max)
+->dns & ssl enumeration
+-> CVEs
+->asn & ip space enumeration and service identification.
+-> subdomain enumeration
+-> subdomain takeovers
+->misconfigured third-party services.
+->misconfigured storage options(s3 buckets)
+-> broken link hijacking
+-> directory enumeration
+-> service eumeration
+->js files for domains,service information such as hardcoded apis & secrets.
+-> github recon
+-> parameter discovery
+-> wayback history & waybackurls
+-> google dork for increasing attack surface.
+-> internt search engine discovery(shodan,censys,fofa,binaryEdge,spyse etc)
+->potential utl extraction for vulnerability automation (gf patterns + automation scripts)
+-> and any possible recon vector(network/web) can be applied.
+
+
+===============================================
+smart offensive approach for recon
+===============================================
+
+-->> choose scope based recon
+
+-->> create a script for automating scope based recon
+-->> run automation script over cloud.
+
+-->> manually recon(github & search engine dorking) while automation completes
+
+-->> create cron jobs/schedule to re-run specific recon task to identify the new assets.
+
+-->> implement alerts/push slack or preferred.
+
+
+
+
+
+
+
+
+
+
