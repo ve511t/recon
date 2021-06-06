@@ -1,0 +1,539 @@
+====================
+recon from jhaddix
+====================
+
+---------
+mission
+---------
+
+wide recon is the art of discoverying as many assets releted to a target as possible make sure you scope permites testing these sites.
+
+
+scope domains -->> acquisitions -->> asn enumeration --> port anlaysis -->> subdomain enumeration -->> reverse whois.
+
+other :
+
+vulns:
+->subdomain takeover
+->buckets
+->github leaks
+
+automation/helper:
+->interface
+->screenshotting
+->frameworks
+
+==============================
+finding seeds/roots
+==============================
+
+we take the tesla program in hackerone 
+
+*.tesla.com
+*.tesla.cn
+*.teslamotors.com
+*.tesla.services
+*.tesla.services
+    any host verified to be owned by tesla motors inc.(domains/ip space/etc)
+official tesla android apps
+official tesla ios apps
+
+---------------------------
+scope domains (hackerone)
+---------------------------
+
+if you have found a vulnerability that affects an asset belonging to verizon media,but is not included as in scope on any of the verizon media programs,please report it to this program.
+
+============================================
+acquisitions(crunchbase)
+============================================
+
+crunchbase is a website to check the acquisitions of a website.
+
+we want to continue to gather seed/root domains.acquisitions are often a new way to wxpand our available assets if they are in scope.we can investigate a company acquisitions on sites like https://crunchbase.com ,wikipedia,and scope.
+
+here we can possibly drill down into old domains related to revlo,clipmine,cruse and goodgame
+
+remember to do some googling on these acquisitions to see if they are still owned by the parent company.many times acquisitions will split back out or get sold to another company.
+
+================================
+ASN ENUMERATION (bgp.he.net)
+================================
+
+autonomous system numbers are given to large enough networks.these asns will help is track down some semblance of an entity's it infrastructure .the most reliable way to get these is manually through hurrucane electrics free-form search
+    -->> http://bgp.he.net
+
+because of the advent of cloud infrasturucture ,ASNs aren't always a complete picture of a network.Rogue assets could exist on cloud environments like aws and azure.here we can see several ip ranges.
+
+===========================
+ASN ENUMERATION (CMD LINE)
+===========================
+
+Some automation is available to get asns .one such tool is the 'net' switch of 'metabigor' by j3ssiejjj which will fetch asn data from a keyword from bgp.he.net asn asnlookup.com
+
+another is "asnlookup" by yassine aboukir which utilizes the maxmind.com dataset.
+
+one problem with cmd line enumeration is that you could return records from another org on accident that contains the keyword 'tesla'.
+
+--------------------------
+asnlookup github usage:
+--------------------------
+python asnlookup.py -o tesla
+
+---------------------------
+metabigor net usage
+---------------------------
+MAIN FEATURES OF METABIGOR
+
+Searching information about IP Address, ASN and Organization.
+Wrapper for running masscan and nmap on IP target.
+Do searching from command line on some search engine.
+
+
+echo 'tesla' | metabigor net --org -v
+
+==================================
+ASN ENUMERATION (WITH AMASS)
+==================================
+
+for discovering more seed domains are wnat ot scacn the whole asn with a port scanner adn return any root domains we see in ssl certificicates ,et..
+we can do htis with amass intel
+
+amass is written by jeff foley and the amass team.
+
+---------
+usage:
+--------
+amass intel -asn 46489
+
+where 46489 is found in bgp.he.net 
+46489 is a twitch asn found in bgp.he.net 
+
+AMASS IS DIFFERENT FROM 3 different tools
+1)INTEL
+2)ENUM 
+3)
+
+========================================
+REVERSE WHOIS (WITH WHOXY.COM)
+========================================
+
+wvery website has some registration info file with the registrars.two key pieces of data we can use are organization name and any emails in the whois data.to do this you need access to large whois database.whoxy.com is one such database.
+
+you can use whoxy.com in this fashion,after you register and you free api key:
+
+http://api.whoxy.com/?key=apikeyhere&reverse=whois&name=twitch+hostmamster
+
+careful with reverse whois data is it is the least high fidelity source of new root/seed domains it might include may parked domains or redirects to out of scope assets.
+
+=================================
+reverse whois (with DOMLINK)
+=================================
+
+domlink is atool written by vincet Yiu which will recursively query the whoxy whois api.it will start by querying our targets whois record,then analyze all the data and look for other records which contain the organization name or are registred to emails in the record.it does this recursively until it finds no more records of match.
+
+---------------
+usage(DomLink)
+---------------
+
+download form github domlink this is written in python
+
+before doing this you just add the api key into the directory file.
+
+file name is :
+inside the domLink.cfg.example file
+
+you can copy the api from whois.com or anyother websites.
+
+-->>python domLink.py -D target.com -o target.out.txt
+
+here 
+-D --> target domain
+after the domian give the results file.
+
+============================================
+ad/analytics realtionships (builtwith.com)
+============================================
+
+you can also glean related domains and subdomains by looking at a targets ad/analytics tracker codes.may sites use the same codes across all their domains.google analytics and new relic codes are the most common.we can look at these "relationships" via a site called builtwith.builtwith also has a chrome and firefox extension to do this on the fly.
+
+->> https://builtwith.com/relationships/twitch.tv
+
+builtwith is also a tool we will use to profile the technology stack of a target in later slides.
+
+============
+google-fu
+============
+
+you can google the:
+
+-->> copyright text
+--->> terms of service tet
+-->> privacy policy text
+
+from a main target to glean releted hosts on google.
+
+*© 2019 Twitch interactive.inc.*inurl:twitch
+
+===========
+shodan
+===========
+
+shodan is a tool that continiously spiders infrastructure on the internet.it is much more verbose than regulat spiders.it captures response data,cert data,stack profile data,and more.it requires registration.
+
+example:
+
+https://www.shodan.io/search?query=twitch.tv
+
+we can glean a valuable question: is twitch.amazon.eu relevant to our testing?
+
+
+=====================
+subdomain enumeration
+======================
+
+                                        subdomain
+                       -----------------enumeration --------------
+                       |                        |                 |
+                    LINKED AND          SUBDOMAIN           SUBDOMAIN 
+                    JS DISCOVERY         SCRAPING           BRUTEFORCE 
+                    
+                    
+                    
+=========================
+linked and js discovery
+=========================
+
+another way to widen our scope is to examine all the links of our main target.
+we can do this using burp suite pro.
+
+we can visit a seed/root and recursively spider all the links for a term with rege,examining those links..and their links and so on..unitl we have found all sites that could be in our scope.
+
+this is a hybrid technique that will find both roots/seeds and subdomains.
+
+1.turn off passive scanning
+2.set forms auto to submit (if you are feeling frisky)
+3.set scope to advanced control and use "keyword" of target name (not a normal FQDN)
+4.walk+browse main site,then spider all hosts recursively!
+5.profit
+
+after the 1st spider run we are now discoverd a ton of linked urls that belong to our project.
+not only subdomains,but new seeds/roots (teitchapp.net,ext-twitch.tv,twitchsvc.net)
+
+we can also now spider these new hosts and repeat until we have burp spider fatigue.
+
+now that we have this data,how do we export it?
+
+clumsily=(
+
+1) select all hosts in the site tree
+2)in pro only right click the selected hosts.
+3) go to "engagement tools" -> "analyze target"
+4)save report as an html file
+5) copy the hosts from the "target" section.
+
+=============================================
+linked discovery(with GOSPIDER or hakrawler)
+==============================================
+
+linked discovery really just counts on usig a spider recursively.
+
+-> one of the most etensible spiders for general automation is GOSPIDER written by j3ssiejjj which can be used for many things and supports parsing js very well.
+
+in addition hakrawler by hakluke has many parsing startegies that intrest bug hunters.
+
+---------------
+gospider usage
+---------------
+
+gospider -s https://www.twitch.tv
+
+===========================================
+subdomain enumeration (with subdomainizer)
+===========================================
+
+subdomainizer by neeraj edwards is a tool with three purposes in analyzing javascript.it will take a page and run..
+
+1) find subdoamins referenced in js files.
+2) find cloud services referenced in js files
+3) use the shannon entrophy formula to find potentially sensitive items in js files.
+
+it will take a single page ans scan for js files to analyze
+
+if hust looking for subdomains subscrapper by cillian-collins might be better because it has recursion.
+
+================================================================================================================================================================================================
+            SUBDOMAIN SCRAPING 
+
+================================================================================================================================================================================================
+
+===========================
+SUBDOMAIN SCRAPING SOURCES
+===========================
+
+the net set of tools scrape domain information from all sorts of project that expose databases of urls or domains
+
+new sources are comming out all the time so the tools must evolve constantly.
+
+this is only a small list of sources.amny more exist.
+
+
+---------------------------------------------------
+subdomain scraping example (google)
+---------------------------------------------------
+
+1) site:twitch.tv -www.twitch.tv
+2) site:twitch.tv -www.twitch.tv -watch.twitch.tv
+3) site:twitch.tv -www.twitch.tv -watch.twitch.tv -dev.twitch.tv
+
+================================
+subdomain scraping (amass)
+================================
+
+for scraping subdomain data there are two industry leading tools at the moment;amass and subfinder.they parse all the "sources" referenced in the previous slides,and more.
+
+amass has the most sources,extensible output,bruteforcing,permutation scanning,and a ton of other modes to do additional analysis of attack surfaces.
+
+-------------
+amass usage
+--------------
+
+amass enum -d twitch.tv
+
+
+==>> amass also correlates these scraped domains to ASNs and lists what network ranges they appeared in.
+
+useful.
+if a new asn is discovered you can feed it back to amass intel.
+
+=================================
+subdomain scraping (subfinder v2)
+==================================
+
+subfinder is another best in breed tool originally written by ice3man and michael skelton
+
+it is now maintianded by a larger group,called projectdiscovery.io
+
+it incorporates multiple sources has extensible output,and more..
+
+---------
+usage
+---------
+
+subfinder -d hackerone.com -v -o sai.txt
+
+here:
+
+-v means verbose 
+
+
+============================================================
+subdomain scraping (github-subdomains.py) and github-search try to find one thing by 2 names of repo
+=============================================================
+
+a new addition to my subdomain enumeration is scraping github.github-subdomains.py is a script written by gwendal le coguic as part of his EPIC github enumeration repo called "github-search" it will query the github api for references to a root and pull out subdomains.
+
+note:
+the github api return somewhat random results and is rate limited.in any automation i run 5 iterations of this script.four of them with a six second slepp in between them,and the last with a 10 second sleep,to get some consistency.
+
+=================================
+subdomain scraping (shosubgo)
+=================================
+
+another valuable bespoke scraping technique is gathering subdomains from shodan.
+
+shosubgo is a go script written by incogbyt3 which is effective and relaiable for this method..
+
+====================================
+subdomain scraping (cloud ranges)
+====================================
+ 
+ a highly valuable technique is to monitor whole cloud ranges of AWS,GCP,and azure for ssl sites and parse their certificates to match your target.
+ 
+ doing this is cumbersome on your own but possible with something like masscan.daehee park outlines it here.
+ 
+ luckily sam erb did a wonderful defcon talk on this and created a service which scans every week.
+ 
+ some bash scripting is required.
+ 
+ 
+ 
+ 
+================================================================================================================================================================================================
+                            
+                            SUBDOMAIN BRUTEFORCE
+
+================================================================================================================================================================================================
+ 
+as the point we move into guessing for live subdomains
+
+if we try and resolve
+
+thistotallydoesnteist.company.com   we will "usaully" not get a record.
+
+so we can use a large list of common subdomain names and just try and resolve them.
+analyzing if they succeed.
+
+the problem in this method is that only one DNS server to do this will take forever some tools have come out that are both threaded and use multiple DNS resolvers simulaneously.
+this speeds up this process significantly.
+
+massdns by @blechschmidt pioneered this idea.
+
+amass (8 revolvers by default) does this with the -rf flag.
+
+=======================================
+subdomain bruting (Amass)
+=======================================
+
+amass offers bruteforcing via the 'enum' tool using the "brute" switch
+
+-->> amass enum -brute -d twitch.tv -src
+
+you can aslo specify any number of resolvers 
+
+-->> amass enum -brute -d twitch.tv -rf resolvers.txt -w bruteforce.list
+
+doing this with amass also gives us the opportunity to resolve the found domains.
+
+==================================
+subdomain bruting (shuffleDNS)
+=================================
+
+if you like separating the work to different tools or prefer the massdns core you can use shuffleDNS by the projectDiscovery team.
+
+------------------
+shuffleDNS usage
+------------------
+
+shuffledns -d hackerone.com -w words.txt -r resolvers-excellent.txt
+
+=================================
+subdomain bruting lists
+=================================
+
+a multi resolver,threaded subdomain bruter is only as good as its wordlist.
+
+there are 2 trains of thought here:
+    1)tailored wordlists
+    2)massive wordlists
+both have advantages.
+
+my all.txt file is still what i use on regular basis.it combines 7 yyears of DNS bruteforce lists into one.
+
+but you can make customized wordlists with something like what tomnomnom talked.
+
+i also think there was a tool for this recently..
+
+new lists for subdomain bruteforce are relatively the same nowadays,but the 1 st team to really literate on this is the assetnote team with their commonspeak data collection.
+
+the all.txt file indicates commonsspeak v1 data but there is also a second version commonspeak data out:
+
+https://github.com/assetnote/commonspeak2
+
+===============================
+ALTERATION SCANNING
+===============================
+
+when bruteforcing or gathering subdomains via scraping you may come across a naming pattern in these subdomains.
+
+even though you may not have found it yet,there may be other targets that conform to naming conventions.
+
+in addition,sometimes targets are not explicitly protected across naming conventions.
+
+the first tool to attempt to recognize these patterns and bruteforce for some of them was altdns written by naffy and shubs
+
+now amass contains logic to check for these "permutations".amass includes this anlaysis in a default run some personal experience cited ont the next page.
+
+
+
+================================================================================================================================================================================================
+                            OTHER
+================================================================================================================================================================================================
+
+
+-------------------------
+PORT ANALYSIS (MASSCAN)
+-------------------------
+
+most hacker education would have you use nmap here,but massdns by robert graham is much faster for general "findinf-open-ports-on-tcp".chaining masscan's output to then be namped can save a lot of time.
+
+masscan achieves this speed with re-written tcp/ip stack,true multi-threading and is written in C.
+
+sample syntax for scanning a list of IPS:
+
+    -->> masscan -p1-65535 -iL $ipFile --max-rate 1800 -oG $outPutFile.log
+    
+    a full syntac guide of masscan (authored by daniel miessler) can be found here:
+    
+https://danielmiessler.com/study/massscan/
+
+------------
+usage
+------------
+
+-->> masscan -p1-65535 66.85.136.155 --max-rate 1800
+
+============================
+port anlaysis (dnmasscan)
+============================
+one limitation of masscan is that it only scans ip addresses. Y
+
+you can write you own simple converter script or you can use something like dnmasscan by @rastating
+
+
+--------------
+usage
+--------------
+
+-->>dnmasscan example.txt dns.log -p80,443 -0G masscan.log
+-->>cat dns.log (its not open thats why we convert by using dnmasscan)
+-->> cat masscan.log 
+
+=================================
+service scanning (burtespray)
+=================================
+
+when we get this service/port information we can feed it to map to get a OG output file.
+
+
+we can then scan the remote administration protocols for default password with a tool called burtespray which takes the namp OG file format.
+
+-->> masscan -->>nmao service scan -oG -->> brutespray credential bruteforce
+
+===========================
+GITHUB DORKING (MANUAL)
+==========================
+
+many organizations quickly grow in their engineering teams,sooner or later a new developer,intern, contactor,or other staff will leak source code online,usually thoough a public github.com repo that they mistakenly though they had set private.
+
+enjoy my quick github dork collection:
+
+https://gist.github.com/jhaddix/1fb
+
+the repo mentioned earlier by gwendal le coguic called "github-search" has some automated github 
+tools for this as well
+
+===============================================================
+screenshotting(eyewitness,aquatone,httpscreenshot)
+===============================================================
+
+at this point we have a lot of attack surface,we can feed possible domains to a tool and attempt to screenshot the results.this will allows us to "eye-ball" things that might be interesting.
+
+there are many tools for this.aquatone is a wider recon framework that does this,httpscreenshot,and eyewitness,i use eyewitness because it will prepend both the http and https protocol for each domain we have observed,im not highly tied to this tool though,find one that works you.
+
+=============================================
+subdomain takeover (can i take over xyz)
+=============================================
+
+"subdomain takeover vulnerability occur when a subdomain (subdomain.example.com) is pointing to a service (e:g.github pages,heroku,etc) that has been removed or deleted.this allows an attacker ot setup a page on the service that was being used and point their page to that subdomain.for example,if subdomain.example.com was pointing to a github page and the user decided to delete their github page,an attacker can now create a github page,add a CNAME file containing subdomain.example.com,and claim subdomain.example.com"
+
+a greate resource for subdomain takeover is ED overflow's repo can-i-take-over-xyz
+
+================================================================================================================================================================================================
+                AUTOMATION ++
+================================================================================================================================================================================================
+
+
+
+
+                        
